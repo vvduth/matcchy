@@ -1,17 +1,22 @@
-'use client'
+"use client";
 import { Button, Card, CardBody, CardHeader, Input } from "@heroui/react";
 import React from "react";
 import { GiPadlock } from "react-icons/gi";
-import {useForm} from 'react-hook-form'
-
+import { useForm } from "react-hook-form";
+import { LoginSchema, loginSchema } from "@/lib/loginSchema";
+import { zodResolver } from "@hookform/resolvers/zod";
 const Loginform = () => {
-
-    const {register, handleSubmit,
-         formState: {errors, isValid}
-    } = useForm()
-    const onSubmit = (data: any) => {
-        console.log(data)
-    }
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isValid },
+  } = useForm<LoginSchema>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onTouched'
+  });
+  const onSubmit = (data: LoginSchema) => {
+    console.log(data);
+  };
   return (
     <Card className="w-2/5 mx-auto ">
       <CardHeader
@@ -28,32 +33,33 @@ const Loginform = () => {
       </CardHeader>
       <CardBody>
         <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="space-y-4">
-                <Input 
-                defaultValue=""
-                    label='Email'
-                    variant="bordered"
-                    {...register('email', {
-                        required:'Email is required'
-                    })}
-                    isInvalid= {!!errors.email}
-                    errorMessage={errors.email?.message as string}
-                />
-                <Input 
-                defaultValue=""
-                    label='Password'
-                    type="password"
-                    variant="bordered"
-                    {...register('password', {
-                        required:'Password is required'
-                    })}
-                    isInvalid= {!!errors.password}
-                    errorMessage={errors.password?.message as string}
-                />
-                <Button disabled={!isValid} fullWidth color='secondary' type="submit">
-                    Login
-                </Button>
-            </div>
+          <div className="space-y-4">
+            <Input
+              defaultValue=""
+              label="Email"
+              variant="bordered"
+              {...register("email")}
+              isInvalid={!!errors.email}
+              errorMessage={errors.email?.message as string}
+            />
+            <Input
+              defaultValue=""
+              label="Password"
+              type="password"
+              variant="bordered"
+              {...register("password")}
+              isInvalid={!!errors.password}
+              errorMessage={errors.password?.message as string}
+            />
+            <Button
+              disabled={isValid}
+              fullWidth
+              color="secondary"
+              type="submit"
+            >
+              Login
+            </Button>
+          </div>
         </form>
       </CardBody>
     </Card>
