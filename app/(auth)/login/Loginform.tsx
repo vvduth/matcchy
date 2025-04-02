@@ -1,8 +1,17 @@
+'use client'
 import { Button, Card, CardBody, CardHeader, Input } from "@heroui/react";
 import React from "react";
 import { GiPadlock } from "react-icons/gi";
+import {useForm} from 'react-hook-form'
 
 const Loginform = () => {
+
+    const {register, handleSubmit,
+         formState: {errors, isValid}
+    } = useForm()
+    const onSubmit = (data: any) => {
+        console.log(data)
+    }
   return (
     <Card className="w-2/5 mx-auto ">
       <CardHeader
@@ -18,18 +27,30 @@ const Loginform = () => {
         </div>
       </CardHeader>
       <CardBody>
-        <form action="">
+        <form onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-4">
                 <Input 
+                defaultValue=""
                     label='Email'
                     variant="bordered"
+                    {...register('email', {
+                        required:'Email is required'
+                    })}
+                    isInvalid= {!!errors.email}
+                    errorMessage={errors.email?.message as string}
                 />
                 <Input 
+                defaultValue=""
                     label='Password'
                     type="password"
                     variant="bordered"
+                    {...register('password', {
+                        required:'Password is required'
+                    })}
+                    isInvalid= {!!errors.password}
+                    errorMessage={errors.password?.message as string}
                 />
-                <Button fullWidth color='secondary' type="submit">
+                <Button disabled={!isValid} fullWidth color='secondary' type="submit">
                     Login
                 </Button>
             </div>
