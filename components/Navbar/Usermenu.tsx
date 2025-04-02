@@ -6,6 +6,7 @@ import {Avatar} from '@heroui/avatar';
 import { Session } from "next-auth";
 import Link from "next/link";
 import React from "react";
+import { signOutUser } from "@/app/actions/authActions";
 
 type Props = {
   user: Session["user"];
@@ -40,7 +41,7 @@ const Usermenu = ({ user }: Props) => {
           Edit profile
         </DropdownItem>
         <DropdownItem key={"logout"} 
-        onPress={async() => {}}
+        onPress={async() => {signOutUser()}}
         color="danger">
           Log out
         </DropdownItem>

@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn } from "@/auth";
+import { signIn, signOut } from "@/auth";
 import { LoginSchema } from "@/lib/loginSchema";
 import { prisma } from "@/lib/prisma";
 import { registerSchema, RegisterSchema } from "@/lib/registerSchema";
@@ -99,4 +99,9 @@ export async function getUserByEmail(email:string) {
 
 export async function getUserById(id:string) {
   return prisma.user.findUnique({where: {id}})
+}
+
+
+export async function signOutUser() {
+  await signOut({redirectTo: '/'})
 }

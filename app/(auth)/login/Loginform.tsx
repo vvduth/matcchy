@@ -23,6 +23,7 @@ const Loginform = () => {
     const res = await signInUser(data)
     if (res.status === 'success' ) {
       router.push('/members')
+      router.refresh()
     } else {
       toast.error(res.error as string)
     }
