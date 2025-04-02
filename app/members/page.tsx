@@ -1,6 +1,8 @@
 import React from 'react'
+import { getMembers } from '../actions/memberActions'
 
-const MemberPage = () => {
+ const  MemberPage = async () => {
+  const member = await getMembers()
   return (
     <div>MemberPage</div>
   )
