@@ -1,8 +1,12 @@
 import React from 'react'
+import Loginform from './Loginform'
 
 const LoginPage = () => {
   return (
-    <div>LoginPage</div>
+   <div className='flex items-center justify-center
+    align-middle min-h-screen'>
+     <Loginform />
+   </div>
   )
 }
 

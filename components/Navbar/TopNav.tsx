@@ -2,6 +2,7 @@ import { GiMatchTip } from "react-icons/gi";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
 import Link from "next/link";
 import { Button } from "@heroui/button";
+import NavLink from "./NavLink";
 
 const TopNav = () => {
   return (
@@ -25,16 +26,11 @@ const TopNav = () => {
         </div>
       </NavbarBrand>
       <NavbarContent justify="center">
-        <NavbarItem as={Link} href={"/members"}>
-          Matches
-        </NavbarItem>
-        <NavbarItem as={Link} href={"/lists"}>
-          Lists
-        </NavbarItem>
+        <NavLink label="Members" href="/members" />
+        <NavLink label="lists" href="/lists" />
 
-        <NavbarItem as={Link} href={"/messages"}>
-          Messages
-        </NavbarItem>
+        <NavLink label="messages" href="/messages" />
+
       </NavbarContent>
       <NavbarContent justify="end">
         <Button
