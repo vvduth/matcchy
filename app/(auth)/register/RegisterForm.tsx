@@ -6,6 +6,7 @@ import { GiPadlock } from "react-icons/gi";
 import { useForm } from "react-hook-form";
 import { RegisterSchema, registerSchema } from '@/lib/registerSchema';
 import { zodResolver } from "@hookform/resolvers/zod";
+import { registerUser } from '@/app/actions/authActions';
 const RegisterForm = () => {
     const {
         register,
@@ -15,8 +16,10 @@ const RegisterForm = () => {
         resolver: zodResolver(registerSchema),
         mode: 'onTouched'
       });
-      const onSubmit = (data: RegisterSchema) => {
-        console.log(data);
+      const onSubmit = async (data: RegisterSchema) => {
+        console.log('trigerred');
+        const result = await registerUser(data)
+        console.log(result)
       };
       return (
         <Card className="w-2/5 mx-auto ">
@@ -27,7 +30,7 @@ const RegisterForm = () => {
             <div className="flex flex-col gap-2 items-center text-secondary">
               <div className="flex flex-row items-center gap-3">
                 <GiPadlock size={30} />
-                <h1 className="text-3xl font-semibold">Login</h1>
+                <h1 className="text-3xl font-semibold">Register</h1>
               </div>
               <p className="text-neutral-500">Welcome to Matchhy</p>
             </div>
@@ -61,12 +64,14 @@ const RegisterForm = () => {
                   errorMessage={errors.password?.message as string}
                 />
                 <Button
-                  disabled={isValid}
+                  disabled={!isValid}
                   fullWidth
                   color="secondary"
                   type="submit"
                 >
-                  Login
+                  {isValid ? (<>Register</>) : (
+                    <>No no</>
+                  )}
                 </Button>
               </div>
             </form>
