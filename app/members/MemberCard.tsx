@@ -1,3 +1,4 @@
+'use client'
 import LikeButton from "@/components/LikeButton";
 import { calAge } from "@/lib/util";
 import { Card, CardFooter, Image } from "@heroui/react";
@@ -11,6 +12,11 @@ type Props = {
 };
 const MemberCard = ({ member, likeIds }: Props) => {
   const hasLiked = likeIds.includes(member.userId);
+
+  const preventLineAction = (e: React.MouseEvent) => {
+    e.preventDefault()
+    e.stopPropagation()
+  }
   return (
     <Card fullWidth as={Link} href={`/members/${member.userId}`}>
       <Image
@@ -20,8 +26,11 @@ const MemberCard = ({ member, likeIds }: Props) => {
         src={member.image || "/images/user.png"}
         className="aspect-square object-cover"
       />
+      <div
+      onClick={preventLineAction}>
       <div className="absolute top-3 right-3 z-50">
         <LikeButton targetId={member.userId} hasLiked={hasLiked} />
+      </div>
       </div>
       <CardFooter
         className="flex justify-start bg-black 

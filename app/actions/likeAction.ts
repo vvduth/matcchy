@@ -48,9 +48,75 @@ export async function fetchCurrentUserLikeIds() {
       },
     });
 
-    return likeIds.map(like => like.targetUserId)
+    return likeIds.map((like) => like.targetUserId);
   } catch (error) {
     console.log(error);
     throw error;
   }
+}
+
+// fetch the list of users  that current user have like
+export async function fetchCurrentUserLikes(type = "source") {
+  try {
+    const userId = await getAuthUserid();
+
+    switch (type) {
+      case "source":
+        // get who you have liked
+        return await fetchSourceLike(userId);
+      case "target":
+        // get who liked you
+        return await fetchTargetLike(userId);
+      case "mutual":
+        // get who u have liked and liked you back
+        return await fetchMutualLike(userId);
+      default:
+        return [];
+    }
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
+async function fetchSourceLike(userId: string) {
+  const sourceList = await prisma.like.findMany({
+    where: {
+      sourceUserId: userId,
+    },
+    select: { targetMember: true },
+  });
+
+  return sourceList.map((x) => x.targetMember);
+}
+
+async function fetchTargetLike(userId: string) {
+  const targetList = await prisma.like.findMany({
+    where: {
+      targetUserId: userId,
+    },
+    select: { sourceMember: true },
+  });
+
+  return targetList.map((x) => x.sourceMember);
+}
+
+async function fetchMutualLike(userId: string) {
+  // get the list of memeber useid the source use has liked
+  const likedUsers = await prisma.like.findMany({
+    where: { sourceUserId: userId },
+    select: { targetUserId: true },
+  });
+
+  const likedIds = likedUsers.map((x) => x.targetUserId);
+
+  // fond out those user id are indsdie the target memeber as wll
+  const mutualList = await prisma.like.findMany({
+    where: {
+      AND: [{ targetUserId: userId }, { sourceUserId: { in: likedIds } }],
+    },
+    select: { sourceMember: true },
+  });
+
+  return mutualList.map((x) => x.sourceMember);
 }
