@@ -1,11 +1,19 @@
-import React from 'react'
-import { getMembers } from '../actions/memberActions'
+import React from "react";
+import { getMembers } from "../actions/memberActions";
+import MemberCard from "./MemberCard";
 
- const  MemberPage = async () => {
-  const member = await getMembers()
+const MemberPage = async () => {
+  const members = await getMembers();
   return (
-    <div>MemberPage</div>
-  )
-}
+    <div
+      className="mt-10 grid grid-cols-1 md:grid-cols-2 
+    lg:grid-cols-3 xl:grid-cols-6 gap-8"
+    >
+      {members && members.map((member) => <MemberCard 
+      key={member.id}
+      member={member} />)}
+    </div>
+  );
+};
 
-export default MemberPage
+export default MemberPage;
