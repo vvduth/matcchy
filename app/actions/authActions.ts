@@ -1,6 +1,6 @@
 "use server";
 
-import { signIn, signOut } from "@/auth";
+import { auth, signIn, signOut } from "@/auth";
 import { LoginSchema } from "@/lib/loginSchema";
 import { prisma } from "@/lib/prisma";
 import { registerSchema, RegisterSchema } from "@/lib/registerSchema";
@@ -104,4 +104,14 @@ export async function getUserById(id:string) {
 
 export async function signOutUser() {
   await signOut({redirectTo: '/'})
+}
+
+export async function getAuthUserid () {
+  const session = await auth()
+          const userId = session?.user?.id
+
+          if (!userId) {
+            throw new Error('unauthorized')
+        }
+        return userId
 }
