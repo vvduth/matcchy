@@ -3,31 +3,28 @@ import { notFound } from "next/navigation";
 import React from "react";
 import MemberSidebar from "../MemberSidebar";
 import { Card } from "@heroui/react";
+import { getAuthUserid } from "@/app/actions/authActions";
 
 const Layout = async ({
-  children,
-  params,
+  children
 }: {
   children: React.ReactNode;
-  params: Promise<{
-    userId: string;
-  }>;
+ 
 }) => {
-  const { userId } = await params;
+  const  userId  = await getAuthUserid()
   const member = await getMemberById(userId);
+  const basePath = `/members/edit`;
   if (!member) {
     return notFound()
   }
-  const basePath = `/members/${member.userId}`;
   const navLinks = [
-    { name: "Profile", href: basePath },
-    { name: "Photos", href: `${basePath}/photos` },
-
-    { name: "Chat", href: `${basePath}/chat` },
+    { name: "Update profile", href: basePath },
+    { name: "Edit photos", href: `${basePath}/photos` },
   ];
   return <div className="grid grid-cols-12 gap-5 h-[80vh]">
     <div className="col-span-5 lg:col-span-3">
-    <MemberSidebar member={member} navLinks={navLinks}/>
+    <MemberSidebar member={member}
+     navLinks ={navLinks}/>
     </div>
     <div className="col-span-7 lg:col-span-9">
         <Card className="w-full mt-10 h-[80vh]">
