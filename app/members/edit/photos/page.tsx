@@ -9,6 +9,7 @@ import { notFound } from "next/navigation";
 import StarButton from "@/components/StarButton";
 import DeleteButton from "@/components/DeleteButton";
 import ImageUpLoadButton from "@/components/ImageUpLoadButton";
+import MemberPhotoUpload from "./MemberPhotoUpload";
 
 const PhotosPage = async () => {
   const userId = await getAuthUserid();
@@ -20,10 +21,10 @@ const PhotosPage = async () => {
       </CardHeader>
       <Divider />
       <CardBody>
-        <div className="pt-5 pl-5">
-          <ImageUpLoadButton />
-        </div>
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap3 p-5">
+        <MemberPhotoUpload 
+
+         />
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-3 p-5">
           {photos &&
             photos.map((photo) => (
               <div key={photo.id} className="relative">
