@@ -7,9 +7,10 @@ import { Session } from "next-auth";
 import Link from "next/link";
 import React from "react";
 import { signOutUser } from "@/app/actions/authActions";
+import { User } from "@prisma/client";
 
 type Props = {
-  user: Session["user"];
+  user: { name: string | null; image: string | null } | null
 };
 const Usermenu = ({ user }: Props) => {
   return (

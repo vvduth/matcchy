@@ -5,9 +5,12 @@ import { Button } from "@heroui/button";
 import NavLink from "./NavLink";
 import { auth } from "@/auth";
 import Usermenu from "./Usermenu";
+import { getUserById } from "@/app/actions/authActions";
+import { getUserInfoForNav } from "@/app/actions/userActions";
 
 const TopNav = async () => {
   const session = await auth();
+  const userInfo = session?.user && await getUserInfoForNav()
   return (
     <Navbar
       maxWidth={"xl"}
@@ -35,8 +38,8 @@ const TopNav = async () => {
         <NavLink label="messages" href="/messages" />
       </NavbarContent>
       <NavbarContent justify="end">
-        {session?.user ? (
-          <Usermenu user={session.user} />
+        {userInfo? (
+          <Usermenu user={userInfo} />
         ) : (
           <>
             <Button
