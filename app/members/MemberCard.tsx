@@ -1,6 +1,6 @@
 'use client'
 import LikeButton from "@/components/LikeButton";
-import { calAge } from "@/lib/util";
+import { calAge, transformImgUrl } from "@/lib/util";
 import { Card, CardFooter, Image } from "@heroui/react";
 import { Member } from "@prisma/client";
 import Link from "next/link";
@@ -23,7 +23,7 @@ const MemberCard = ({ member, likeIds }: Props) => {
         isZoomed
         alt={member.name}
         width={350}
-        src={member.image || "/images/user.png"}
+        src={transformImgUrl(member.image) || "/images/user.png"}
         className="aspect-square object-cover"
       />
       <div

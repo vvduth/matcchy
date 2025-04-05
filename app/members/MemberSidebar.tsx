@@ -1,5 +1,5 @@
 'use client'
-import { calAge } from "@/lib/util";
+import { calAge, transformImgUrl } from "@/lib/util";
 import { Button, Card, CardBody, CardFooter, Divider, Image } from "@heroui/react";
 import { Member } from "@prisma/client";
 import Link from "next/link";
@@ -18,7 +18,7 @@ const MemberSidebar = ({ member, navLinks }: Props) => {
       <Image
         height={200}
         width={200}
-        src={member.image || "/images/user.png"}
+        src={transformImgUrl(member.image) || "/images/user.png"}
         alt="user profile main image"
         className="rounded-full mt-6 aspect-square object-cover"
       />

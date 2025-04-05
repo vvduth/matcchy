@@ -8,6 +8,7 @@ import Link from "next/link";
 import React from "react";
 import { signOutUser } from "@/app/actions/authActions";
 import { User } from "@prisma/client";
+import { transformImgUrl } from "@/lib/util";
 
 type Props = {
   user: { name: string | null; image: string | null } | null
@@ -23,7 +24,7 @@ const Usermenu = ({ user }: Props) => {
           color="secondary"
           name={user?.name || "user avatar"}
           size="sm"
-          src={user?.image || "/images/user.png"}
+          src={transformImgUrl(user?.image!) || "/images/user.png"}
         />
       </DropdownTrigger>
       <DropdownMenu variant="flat" aria-label="user action menu">

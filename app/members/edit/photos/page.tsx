@@ -14,12 +14,13 @@ const PhotosPage = async () => {
   const member = await getMemberById(userId);
   return (
     <>
-      <CardHeader className="text-2xl font-semibold text-secondary">
-        edit profile
+      <CardHeader className='flex flex-col md:flex-row justify-between items-center'>
+        <div className="text-2xl font-semibold text-secondary">Edit profile</div>
+        <MemberPhotoUpload />
       </CardHeader>
       <Divider />
       <CardBody>
-        <MemberPhotoUpload />
+        
         <MemberPhotos
           photos={photos}
           editing={true}

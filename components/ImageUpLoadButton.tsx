@@ -15,8 +15,8 @@ const ImageUpLoadButton = ({onUploadImage}: Props) => {
         onSuccess={onUploadImage}
         signatureEndpoint={'/api/sign-image'}
         uploadPreset='matchyy'
-        className='flex items-center gap-2 bg-secondary
-        text-white py-2 px-4 hover:bg-secondary/70 rounded-md'
+        className='flex items-center gap-2 border-2 border-secondary
+        text-secondary py-2 px-4 hover:bg-secondary/70 rounded-md'
     >
         <HiPhoto size={28} />
         Upload new Image
