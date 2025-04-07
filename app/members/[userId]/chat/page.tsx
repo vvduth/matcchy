@@ -22,7 +22,7 @@ const ChatPage = async ({
 
   const body = (
     <MessageList 
-    currentuserId={userId}
+    currentuserId={currentUserId}
     intitalMessages={messages}
     chatId={chatId}
     />

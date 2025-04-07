@@ -10,7 +10,8 @@ type Props = {
   currentUserId: string;
 };
 const MessageBox = ({ message, currentUserId }: Props) => {
-  const isCurrentUserSender = message.senderId === currentUserId;
+  console.log(message.senderId, ' ' ,currentUserId)
+  const isCurrentUserSender = (message.senderId === currentUserId);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
 
@@ -48,7 +49,7 @@ const renderMessageHeader = () => (
           <span className='text-sm  text-gray-500 ml-2'>{message.createdAt}</span>
       </div>
       {message.dateRead && message.recipientId !== currentUserId ? (
-          <span className='text-xs text-black text-italic'>(Read {timeAgo(message.dateRead)})</span>
+          <span className='text-xs text-black text-italic'> {' '}(Read {timeAgo(message.dateRead)})</span>
       ) : <div />}
   </div>
 )

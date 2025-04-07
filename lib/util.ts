@@ -47,5 +47,5 @@ export function createChatId(a: string, b: string) {
 
 
 export function timeAgo(date: string) {
-  return formatDistance(new Date(date), new Date()) + 'ago'
+  return formatDistance(new Date(date), new Date()) + ' ago'
 }
