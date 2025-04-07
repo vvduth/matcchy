@@ -88,6 +88,19 @@ export async function getMessages(recipientId: string) {
       },
     });
 
+    if (messages.length > 0) {
+      await prisma.message.updateMany({
+        where: {
+          senderId: recipientId,
+          recipientId: userId,
+          dateread: null,
+        },
+        data: {
+          dateread: new Date(),
+        },
+      });
+    }
+
     const mappedMessages = messages.map((message) =>
       mapMessageToMessageDto(message)
     );
@@ -110,7 +123,7 @@ export async function getMessageByContainer(container: string) {
         [selector]: userId,
       },
       orderBy: {
-        createdAt: 'desc'
+        createdAt: "desc",
       },
       select: {
         id: true,
@@ -140,4 +153,9 @@ export async function getMessageByContainer(container: string) {
     console.log(error);
     throw error;
   }
+}
+
+
+export async function deleteMessage ( messageId: string, isOutBox: boolean) {
+  const selector = isOutBox ? 'senderDeleted': 'recipientDeleted';
 }

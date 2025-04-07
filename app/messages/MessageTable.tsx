@@ -1,5 +1,5 @@
 "use client";
-import React, { Key } from "react";
+import React, { Key, useCallback } from "react";
 import {
   Table,
   TableHeader,
@@ -11,47 +11,99 @@ import {
 } from "@heroui/table";
 import { useRouter, useSearchParams } from "next/navigation";
 import { MessageDto } from "@/types";
+import { Avatar, Button, Card } from "@heroui/react";
+import { AiFillDelete } from "react-icons/ai";
 
 type Props = {
   messages: MessageDto[];
 };
 const MessageTable = ({ messages }: Props) => {
   const searchParams = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
   const isOutBox = searchParams.get("container") === "outbox";
   const columns = [
     {
-      key: isOutBox ? 'recipientName' : 'senderName',
+      key: isOutBox ? "recipientName" : "senderName",
       label: isOutBox ? "Recipient" : "Sender",
     },
     { key: "text", label: "Message" },
     { key: "createdAt", label: isOutBox ? "Date sent" : "Date received" },
+    { key: "Actions", label: "Actions" },
   ];
 
   const handleRowSelect = (key: Key) => {
-    const message = messages.find(m => m.id === key)
-    const url = isOutBox ? `/members/${message?.recipientId}` : `/member/${message?.senderId}`
-    router.push(url+ '/chat')
-  }
+    const message = messages.find((m) => m.id === key);
+    const url = isOutBox
+      ? `/members/${message?.recipientId}`
+      : `/members/${message?.senderId}`;
+    router.push(url + "/chat");
+  };
+
+  const renderCell = useCallback(
+    (item: MessageDto, columnKey: keyof MessageDto) => {
+      const cellvalue = item[columnKey];
+      switch (columnKey) {
+        case "recipientName":
+        case "senderName":
+          return (
+            <div
+              className={`flex items-center gap-2 cursor-pointer`}
+            >
+              <Avatar
+                alt="Image of member"
+                src={
+                  (isOutBox ? item.recipientImage : item.senderImage) ||
+                  "/images/user.png"
+                }
+              />
+              <span>{cellvalue}</span>
+            </div>
+          );
+        case 'text': 
+            return (
+                <div className="truncate">
+                    {cellvalue}
+                </div>
+            )
+        case 'createdAt':
+            return cellvalue   
+        default:
+            return (
+                <Button isIconOnly variant="light"
+                >
+                    <AiFillDelete size={24} className="text-danger" />
+                </Button>
+            );
+      }
+    },
+    [isOutBox]
+  );
   return (
-    <Table aria-label="Message table"
-    selectionMode="single"
-    onRowAction={(key) => handleRowSelect(key)}>
-      <TableHeader>
-        {columns.map((column) => (
-          <TableColumn key={column.key}>{column.label}</TableColumn>
-        ))}
-      </TableHeader>
-      <TableBody items={messages}>
-        {(item) => (
-          <TableRow key={item.id}>
-            {(columnKey) => (
-              <TableCell>{getKeyValue(item, columnKey)}</TableCell>
-            )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
+    <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
+      <Table
+        aria-label="Message table"
+        selectionMode="single"
+        onRowAction={(key) => handleRowSelect(key)}
+        shadow="none"
+      >
+        <TableHeader>
+          {columns.map((column) => (
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          ))}
+        </TableHeader>
+        <TableBody items={messages}>
+          {(item) => (
+            <TableRow key={item.id} className="cursor-pointer">
+              {(columnKey) => (
+                <TableCell className={`${!item.dateRead && !isOutBox ? "font-semibold" : ""}`}>
+                  {renderCell(item, columnKey as keyof MessageDto) }
+                </TableCell>
+              )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+    </Card>
   );
 };
 
