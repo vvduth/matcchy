@@ -14,7 +14,7 @@ const MessageSideBar = () => {
   const [selected, setSelected] = useState(searchParams.get("container") || "");
   const items = [
     { key: "inbox", label: "Inbox", Icon: GoInbox, chip: true },
-    { key: "outBox", label: "OutBox", Icon: MdOutlineOutbox, chip: true },
+    { key: "outbox", label: "OutBox", Icon: MdOutlineOutbox, chip: true },
   ];
 
   const handleSelect = (key: string) => {

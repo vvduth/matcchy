@@ -1,6 +1,7 @@
 import React from 'react'
 import MessageSideBar from './MessageSideBar'
 import { getMessageByContainer } from '../actions/messageAction'
+import MessageTable from './MessageTable'
 
 const MessagesPage = async ({searchParams}: {
   searchParams: Promise<{
@@ -9,14 +10,14 @@ const MessagesPage = async ({searchParams}: {
 }) => {
   const {container} = await searchParams
 
-  const message = await getMessageByContainer(container)
+  const messages = await getMessageByContainer(container)
   return (
     <div className='grid grid-cols-12 gap-5 h-[80vh] mt-10'>
       <div className='col-span-2'>
         <MessageSideBar />
       </div>
       <div className='col-span-10'>
-        mess
+        <MessageTable messages={messages} />
       </div>
     </div>
   )
