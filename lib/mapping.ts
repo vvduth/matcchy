@@ -6,8 +6,8 @@ export function mapMessageToMessageDto(message: MessageWithSenderRecipient) {
     return {
         id: message.id,
         text: message.text,
-        created: formatShortDate(message.created),
-        dateRead: message.dateRead ? formatShortDate(message.dateRead) : null,
+        createdAt: formatShortDate(message.createdAt),
+        dateRead: message.dateread ? formatShortDate(message.dateread) : null,
         senderId: message.sender?.userId,
         senderName: message.sender?.name,
         senderImage: message.sender?.image,
