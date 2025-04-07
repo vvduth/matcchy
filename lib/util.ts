@@ -1,7 +1,8 @@
-import { differenceInYears } from "date-fns";
+import { differenceInYears, formatDistance } from "date-fns";
 import { FieldValues, Path, UseFormSetError } from "react-hook-form";
 import { ZodIssue } from "zod";
 import { format } from "date-fns";
+import { form } from "@heroui/react";
 export function calAge(dob: Date) {
   return differenceInYears(new Date(), dob);
 }
@@ -42,4 +43,9 @@ export function truncateString(text?: string | null, num = 30) {
 }
 export function createChatId(a: string, b: string) {
   return a > b ? `${b}-${a}` : `${a}-${b}`;
+}
+
+
+export function timeAgo(date: string) {
+  return formatDistance(new Date(date), new Date()) + 'ago'
 }

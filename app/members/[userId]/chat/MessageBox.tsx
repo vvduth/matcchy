@@ -3,7 +3,7 @@ import { MessageDto } from "@/types";
 import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Avatar } from "@heroui/react";
-import { transformImgUrl } from "@/lib/util";
+import { timeAgo, transformImgUrl } from "@/lib/util";
 
 type Props = {
   message: MessageDto;
@@ -37,30 +37,21 @@ const MessageBox = ({ message, currentUserId }: Props) => {
         'rounded-r-xl rounded-tl-xl border-gray-200 bg-green-100': !isCurrentUserSender
     }
 );
-  const renderMessageHeader = () => {
-    return (
-        <div
-      className={clsx("flex items-center w-full", {
-        "justify-between": isCurrentUserSender,
-        
-      })}
-    >
-      {message.dateRead && message.recipientId !== currentUserId && (
-        <span className='text-xs text-black text-italic'>
-          (Read 4 mins ago)
-        </span>
-      )}
-      <div className="flex">
-        <span className="text-sm font-semibold text-gray-900">
-          {message.senderName}
-        </span>
-        <span className="text-sm font-semibold text-gray-500 ml-2">
-          {message.createdAt}
-        </span>
+const renderMessageHeader = () => (
+  <div className={clsx('flex items-center w-full', {
+      'justify-between': isCurrentUserSender,
+  })}>
+      
+      <div className='flex'>
+          <span className='text-sm font-semibold text-gray-900'>{message.senderName}</span>
+          
+          <span className='text-sm  text-gray-500 ml-2'>{message.createdAt}</span>
       </div>
-    </div>
-    )
-  };
+      {message.dateRead && message.recipientId !== currentUserId ? (
+          <span className='text-xs text-black text-italic'>(Read {timeAgo(message.dateRead)})</span>
+      ) : <div />}
+  </div>
+)
   const rendermessageContent = () => {
     return <div className={messageContentClasses}>
         {renderMessageHeader()}
