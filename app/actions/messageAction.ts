@@ -55,10 +55,12 @@ export async function getMessages(recipientId: string) {
           {
             senderId: userId,
             recipientId: recipientId,
+            senderDeleted:false
           },
           {
             senderId: recipientId,
             recipientId: userId,
+            recipientDeleted:false
           },
         ],
       },
@@ -116,12 +118,17 @@ export async function getMessageByContainer(container: string) {
   try {
     const userId = await getAuthUserid();
 
-    const selector = container === "outbox" ? "senderId" : "recipientId";
+
+
+    const conditions = {
+      [container === 'outbox' ? 'senderId' : 'recipientId'] : userId,
+      ...(container === 'outbox' ? {senderDeleted: false} : {
+        recipientDeleted: false
+      })
+    }
 
     const messages = await prisma.message.findMany({
-      where: {
-        [selector]: userId,
-      },
+      where: conditions,
       orderBy: {
         createdAt: "desc",
       },
@@ -155,7 +162,47 @@ export async function getMessageByContainer(container: string) {
   }
 }
 
+export async function deleteMessage(messageId: string, isOutBox: boolean) {
+  const selector = isOutBox ? "senderDeleted" : "recipientDeleted";
 
-export async function deleteMessage ( messageId: string, isOutBox: boolean) {
-  const selector = isOutBox ? 'senderDeleted': 'recipientDeleted';
+  try {
+    const userId = await getAuthUserid();
+
+    await prisma.message.update({
+      where: {
+        id: messageId,
+      },
+      data: {
+        [selector]: true,
+      },
+    });
+
+    const messageToDelete = await prisma.message.findMany({
+      where: {
+        OR: [
+          {
+            senderId: userId,
+            senderDeleted: true,
+            recipientDeleted: true,
+          },
+          {
+            recipientId: userId,
+            senderDeleted: true,
+            recipientDeleted: true,
+          },
+        ],
+      },
+    });
+
+    if (messageToDelete.length > 0) {
+      await prisma.message.deleteMany({
+        where: {
+          OR: messageToDelete.map((m) => ({ id: m.id })),
+        },
+      });
+    }
+  } catch (error) {
+    console.log(error)
+    throw error
+  }
 }
