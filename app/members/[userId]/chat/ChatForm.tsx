@@ -5,7 +5,7 @@ import { handleFormServerErrors } from "@/lib/util";
 import { Button, Input } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useParams, useRouter } from "next/navigation";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { HiPaperAirplane } from "react-icons/hi2";
 
@@ -17,6 +17,7 @@ const ChatForm = () => {
     register,
     handleSubmit,
     setError,
+    setFocus,
     reset,
     formState: { isSubmitting, isValid, errors },
   } = useForm<MessageSchema>({
@@ -31,9 +32,14 @@ const ChatForm = () => {
     } else {
       reset();
       router.refresh();
+      setTimeout(() => {
+        setFocus("text");
+      },50)
     }
   };
-
+  useEffect(() => {
+    setFocus("text");
+  }, [setFocus]);
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="w-full ">
       <div className="flex items-center gap-2">
