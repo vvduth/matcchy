@@ -2,8 +2,11 @@ import CardInnerWrapper from "@/components/CardInnerWrapper";
 import { CardBody, CardHeader, Divider } from "@heroui/react";
 import React from "react";
 import ChatForm from "./ChatForm";
+import { getMessages } from "@/app/actions/messageAction";
 
-const ChatPage = () => {
+const ChatPage = async ({params}: {params: Promise<{userId: string}>}) => {
+  const { userId } = await params;
+  const messages = await getMessages(userId)
   return (
     <>
       <CardInnerWrapper

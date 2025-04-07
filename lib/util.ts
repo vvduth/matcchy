@@ -1,9 +1,13 @@
 import {differenceInYears} from 'date-fns'
 import { FieldValues, Path, UseFormSetError } from 'react-hook-form'
 import { ZodIssue } from 'zod'
-
+import { format } from 'date-fns'
 export function calAge(dob: Date) {
     return differenceInYears(new Date(),dob)
+}
+
+export function formatShortDate(date: Date) {
+    return format(date, 'dd MMM yy h:mm:a')
 }
 export function handleFormServerErrors<TFieldValues extends FieldValues>(
     errorResponse: {error: string | ZodIssue[]},
