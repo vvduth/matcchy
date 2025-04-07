@@ -4,6 +4,10 @@ import React from "react";
 import ChatForm from "./ChatForm";
 import { getMessages } from "@/app/actions/messageAction";
 import MessageBox from "./MessageBox";
+import MessageList from "./MessageList";
+import { createChatId } from "@/lib/util";
+import { auth } from "@/auth";
+import { getAuthUserid } from "@/app/actions/authActions";
 
 const ChatPage = async ({
   params,
@@ -12,23 +16,16 @@ const ChatPage = async ({
 }) => {
   const { userId } = await params;
   const messages = await getMessages(userId);
+  const currentUserId = await getAuthUserid()
+  console.log(currentUserId)
+  const chatId = createChatId(currentUserId, userId)
 
   const body = (
-    <div>
-      {messages.length > 0 ? (
-        <>
-          {messages.map((message) => (
-            <MessageBox
-              key={message.id}
-              message={message}
-              currentUserId={userId}
-            />
-          ))}
-        </>
-      ) : (
-        <div>No messages to display</div>
-      )}
-    </div>
+    <MessageList 
+    currentuserId={userId}
+    intitalMessages={messages}
+    chatId={chatId}
+    />
   );
   return (
     <>

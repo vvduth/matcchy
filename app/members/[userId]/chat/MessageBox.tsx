@@ -46,7 +46,7 @@ const MessageBox = ({ message, currentUserId }: Props) => {
       })}
     >
       {message.dateRead && message.recipientId !== currentUserId && (
-        <span className="text-xs text-black text-italic">
+        <span className='text-xs text-black text-italic'>
           (Read 4 mins ago)
         </span>
       )}
@@ -72,7 +72,7 @@ const MessageBox = ({ message, currentUserId }: Props) => {
       <div
         className={clsx("flex gap-2 mb-3", {
           "justify-end text-right": isCurrentUserSender,
-          "justify-start text-left": !isCurrentUserSender,
+          "justify-start": !isCurrentUserSender,
         })}
       >
         {!isCurrentUserSender && renderAvatar()}
