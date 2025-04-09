@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from "react";
 import clsx from "clsx";
 import { Avatar } from "@heroui/react";
 import { timeAgo, transformImgUrl } from "@/lib/util";
+import PresenceAvatar from "@/components/PresenceAvatar";
 
 type Props = {
   message: MessageDto;
@@ -23,11 +24,14 @@ const MessageBox = ({ message, currentUserId }: Props) => {
 
   const renderAvatar = () => {
     return (
-      <Avatar
-        name={message.senderName}
-        className="self-end"
-        src={transformImgUrl(message.senderImage!) || "/images/user.png"}
-      />
+      <div  
+      className="self-end">
+         <PresenceAvatar
+     userId={message.senderId}
+      src={transformImgUrl(message.senderImage!) || "/images/user.png"}
+    />
+      </div>
+     
     );
   };
 

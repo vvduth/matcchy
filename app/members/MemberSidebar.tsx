@@ -1,4 +1,5 @@
 'use client'
+import PresenceDot from "@/components/PresenceDot";
 import { calAge, transformImgUrl } from "@/lib/util";
 import { Button, Card, CardBody, CardFooter, Divider, Image } from "@heroui/react";
 import { Member } from "@prisma/client";
@@ -22,10 +23,15 @@ const MemberSidebar = ({ member, navLinks }: Props) => {
         alt="user profile main image"
         className="rounded-full mt-6 aspect-square object-cover"
       />
-      <CardBody>
+      <CardBody className="overflow-hidden">
         <div className="flex flex-col items-center">
+          <div className="flex">
           <div className="text-2xl">
             {member.name}, {calAge(member.dateOfBirth)}
+          </div>
+          <div>
+            <PresenceDot member={member} />
+          </div>
           </div>
           <div className="text-sm text-neutral-500">
             {member.city}, {member.country}
