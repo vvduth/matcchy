@@ -7,11 +7,13 @@ import { auth } from "@/auth";
 import Usermenu from "./Usermenu";
 import { getUserById } from "@/app/actions/authActions";
 import { getUserInfoForNav } from "@/app/actions/userActions";
+import Filters from "../Filters";
 
 const TopNav = async () => {
   const session = await auth();
   const userInfo = session?.user && await getUserInfoForNav()
   return (
+    <>
     <Navbar
       maxWidth={"xl"}
       className="bg-gradient-to-r from-purple-400 to-purple-700"
@@ -62,6 +64,8 @@ const TopNav = async () => {
         )}
       </NavbarContent>
     </Navbar>
+    <Filters />
+    </>
   );
 };
 

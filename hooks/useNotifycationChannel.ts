@@ -27,7 +27,7 @@ export const useNotificationChannel = (userId: string | null) => {
       updateUnreadCount(1)
     } else if (pathname !== `/member/${message.senderId}/chat`) {
       newMessageToast(message)
-      console.log('yo')
+     
       updateUnreadCount(1)
     }
   }, [add, pathname, searchParams ]);
