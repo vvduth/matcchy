@@ -13,6 +13,7 @@ type MessageState = {
 
 export const useMessageStore = create<MessageState>()(devtools((set) =>  ({
     messages: [],
+    unreadCount: 0,
     add: (message: MessageDto) => set(state => ({messages: [message, ...state.messages]})),
     remove:(id) => {
         set(state => ({messages: state.messages.filter(message => message.id !== id)}))

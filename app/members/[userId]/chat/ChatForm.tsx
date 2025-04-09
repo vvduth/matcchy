@@ -25,7 +25,7 @@ const ChatForm = () => {
   });
 
   const onSubmit = async (data: MessageSchema) => {
-    console.log(data);
+    
     const res = await createMessage(params.userId, data);
     if (res.status === "error") {
       handleFormServerErrors(res, setError);

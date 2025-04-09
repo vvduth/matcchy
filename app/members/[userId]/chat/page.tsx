@@ -17,7 +17,6 @@ const ChatPage = async ({
   const { userId } = await params;
   const messages = await getMessages(userId);
   const currentUserId = await getAuthUserid()
-  console.log(currentUserId)
   const chatId = createChatId(currentUserId, userId)
 
   const body = (
