@@ -77,6 +77,8 @@ export async function getMessages(recipientId: string) {
       select: messageSelect,
     });
 
+    let readCount = 0
+
     if (messages.length > 0) {
 
       const readMessageIds = messages.filter(m => m.dateread === null &&
@@ -93,14 +95,13 @@ export async function getMessages(recipientId: string) {
         },
       });
 
+      readCount = readMessageIds.length
       await pusherServer.trigger(createChatId(recipientId, userId), 'messages:read', readMessageIds)
     }
 
-    const mappedMessages = messages.map((message) =>
-      mapMessageToMessageDto(message)
-    );
+    const messagesToReturn = messages.map(message => mapMessageToMessageDto(message));
 
-    return mappedMessages;
+    return {messages: messagesToReturn, readCount}
   } catch (error) {
     console.log(error);
     throw error;
