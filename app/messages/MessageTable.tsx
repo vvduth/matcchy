@@ -17,6 +17,7 @@ import { useState } from "react";
 import { deleteMessage } from "../actions/messageAction";
 import { truncateString } from "@/lib/util";
 import PresenceAvatar from "@/components/PresenceAvatar";
+import MessageTableCell from "./MessageTableCell";
 type Props = {
   messages: MessageDto[];
 };
@@ -54,39 +55,7 @@ const MessageTable = ({ messages }: Props) => {
 
   const renderCell = useCallback(
     (item: MessageDto, columnKey: keyof MessageDto) => {
-      const cellvalue = item[columnKey];
-      switch (columnKey) {
-        case "recipientName":
-        case "senderName":
-          return (
-            <div className={`flex items-center gap-2 cursor-pointer`}>
-              <PresenceAvatar
-              userId={isOutBox ? item.recipientId : item.senderId}
-                
-                src={
-                  (isOutBox ? item.recipientImage : item.senderImage) ||
-                  "/images/user.png"
-                }
-              />
-              <span>{cellvalue}</span>
-            </div>
-          );
-        case "text":
-          return <div className="truncate">{truncateString(cellvalue)}</div>;
-        case "createdAt":
-          return cellvalue;
-        default:
-          return (
-            <Button
-              isIconOnly
-              variant="light"
-              onPress={() => handleDeleteMessage(item)}
-              isLoading={isDeleting.id === item.id && isDeleting.loading}
-            >
-              <AiFillDelete size={24} className="text-danger" />
-            </Button>
-          );
-      }
+      
     },
     [isOutBox, isDeleting.id, isDeleting.loading, handleDeleteMessage]
   );
@@ -112,7 +81,13 @@ const MessageTable = ({ messages }: Props) => {
                 <TableCell
                   className={`${!item.dateRead && !isOutBox ? "font-semibold" : ""}`}
                 >
-                  {renderCell(item, columnKey as keyof MessageDto)}
+                 <MessageTableCell 
+                  item={item}
+                  columnKey={columnKey as string}
+                  isOutBox={isOutBox}
+                  deleteMessage={handleDeleteMessage}
+                  isDeleting={isDeleting.loading && isDeleting.id === item.id }
+                 />
                 </TableCell>
               )}
             </TableRow>

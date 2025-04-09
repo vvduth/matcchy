@@ -39,7 +39,7 @@ export async function createMessage(
 
     // push to pusher
     await pusherServer.trigger(createChatId(userId, recipientUserId), 'message:new', messageDto)
-
+    await pusherServer.trigger(`private-${recipientUserId}`, 'message:new', messageDto)
     return {
       status: "success",
       data: messageDto,
