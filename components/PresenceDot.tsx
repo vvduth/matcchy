@@ -1,6 +1,7 @@
 import usePresenceStore from '@/hooks/usePresenceStore'
 import { Member } from '@prisma/client'
 import React from 'react'
+import { GoDot, GoDotFill } from 'react-icons/go'
 
 
 type Props = {
@@ -15,7 +16,10 @@ const PresenceDot = ({member}: Props) => {
 
     if (!isOnline) return null
   return (
-    <div>PresenceDot</div>
+    <div>
+      <GoDot size={36} className='fill-white absolute -top-[2px] -right-[2px]' />
+      <GoDotFill size={32} className='fill green-500 animate-pulse' /> 
+    </div>
   )
 }
 
