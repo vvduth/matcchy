@@ -4,9 +4,11 @@ import { devtools } from "zustand/middleware"
 
 type MessageState = {
     messages: MessageDto[],
+    unreadCount: number;
     add: (message: MessageDto) => void, 
     remove: (id: string) => void, 
-    set: (mesages: MessageDto[]) => void
+    set: (mesages: MessageDto[]) => void,
+    updateUnreadCount: (amount: number) => void 
 }
 
 export const useMessageStore = create<MessageState>()(devtools((set) =>  ({
@@ -18,4 +20,5 @@ export const useMessageStore = create<MessageState>()(devtools((set) =>  ({
     set:(messages) => {
         set({messages})
     },
+    updateUnreadCount: (amount: number) => set(state => ({unreadCount: state.unreadCount + amount})),
 }), {name: 'messageStoreDemo'}))

@@ -9,62 +9,23 @@ import {
   TableCell,
   getKeyValue,
 } from "@heroui/table";
-import { useRouter, useSearchParams } from "next/navigation";
+
 import { MessageDto } from "@/types";
 import { Avatar, Button, Card } from "@heroui/react";
-import { AiFillDelete } from "react-icons/ai";
-import { useState } from "react";
-import { deleteMessage } from "../actions/messageAction";
-import { truncateString } from "@/lib/util";
-import PresenceAvatar from "@/components/PresenceAvatar";
+
 import MessageTableCell from "./MessageTableCell";
+import { useMessages } from "@/hooks/useMessages";
 type Props = {
-  messages: MessageDto[];
+  initialMessages: MessageDto[];
 };
-const MessageTable = ({ messages }: Props) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const isOutBox = searchParams.get("container") === "outbox";
-  const [isDeleting, setIsDeleting] = useState({ id: "", loading: false });
-  const columns = [
-    {
-      key: isOutBox ? "recipientName" : "senderName",
-      label: isOutBox ? "Recipient" : "Sender",
-    },
-    { key: "text", label: "Message" },
-    { key: "createdAt", label: isOutBox ? "Date sent" : "Date received" },
-    { key: "Actions", label: "Actions" },
-  ];
-  const handleDeleteMessage = useCallback(
-    async (message: MessageDto) => {
-      setIsDeleting({ id: message.id, loading: true });
-      await deleteMessage(message.id, isOutBox);
-      router.refresh();
-      setIsDeleting({ id: "", loading: false });
-    },
-    [isOutBox, router]
-  );
-
-  const handleRowSelect = (key: Key) => {
-    const message = messages.find((m) => m.id === key);
-    const url = isOutBox
-      ? `/members/${message?.recipientId}`
-      : `/members/${message?.senderId}`;
-    router.push(url + "/chat");
-  };
-
-  const renderCell = useCallback(
-    (item: MessageDto, columnKey: keyof MessageDto) => {
-      
-    },
-    [isOutBox, isDeleting.id, isDeleting.loading, handleDeleteMessage]
-  );
+const MessageTable = ({ initialMessages }: Props) => {
+ const {columns, isDeleting, isOutBox, selectRow, deleteMessage, messages} = useMessages(initialMessages)
   return (
     <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
       <Table
         aria-label="Message table"
         selectionMode="single"
-        onRowAction={(key) => handleRowSelect(key)}
+        onRowAction={(key : any) => selectRow(key)}
         shadow="none"
       >
         <TableHeader>
@@ -85,7 +46,7 @@ const MessageTable = ({ messages }: Props) => {
                   item={item}
                   columnKey={columnKey as string}
                   isOutBox={isOutBox}
-                  deleteMessage={handleDeleteMessage}
+                  deleteMessage={deleteMessage}
                   isDeleting={isDeleting.loading && isDeleting.id === item.id }
                  />
                 </TableCell>

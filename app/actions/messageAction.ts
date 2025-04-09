@@ -180,6 +180,22 @@ export async function deleteMessage(messageId: string, isOutBox: boolean) {
   }
 }
 
+export async function getUnreadMesagesCount() {
+  try {
+    const userId = await getAuthUserid()
+    return prisma.message.count({
+      where: {
+        recipientId: userId,
+        dateread: null,
+        recipientDeleted: false 
+      }
+    })
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
+}
+
 const messageSelect = {
   id: true,
   text: true,
