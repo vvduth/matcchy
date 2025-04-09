@@ -18,7 +18,7 @@ Promise<ActionResult<string>> {
       password: data.password, 
       redirect: false
     })
-    console.log(result)
+    
     return {
       status: 'success',
       data: 'Successfully log in'

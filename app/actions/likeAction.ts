@@ -2,6 +2,8 @@
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { getAuthUserid } from "./authActions";
+import { pusherServer } from "@/lib/pusher";
+import { getMemberById } from "./memberActions";
 export async function toogleLikeMember(targetUserId: string, isLiked: boolean) {
   try {
     const session = await auth();
@@ -27,6 +29,11 @@ export async function toogleLikeMember(targetUserId: string, isLiked: boolean) {
           targetUserId: targetUserId,
         },
       });
+
+      // create a private channel, send user id
+      // cm901illz000id4kowgza9lzo
+      const sourceMember = await getMemberById(userId)
+      await pusherServer.trigger(`private-like-${targetUserId}`, 'like:new', sourceMember)
     }
   } catch (error) {
     console.log(error);

@@ -11,7 +11,6 @@ type Props = {
   currentUserId: string;
 };
 const MessageBox = ({ message, currentUserId }: Props) => {
-  console.log(message.senderId, ' ' ,currentUserId)
   const isCurrentUserSender = (message.senderId === currentUserId);
 
   const messageEndRef = useRef<HTMLDivElement>(null);
