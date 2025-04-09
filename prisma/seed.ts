@@ -35,7 +35,10 @@ async function seedMembers() {
 }
 
 async function  main() {
-    await seedMembers()
+    if (process.env.RUN_SEED === 'true' ) {
+        await seedMembers()
+    }
+    
 }
 
 main().catch(e => {
