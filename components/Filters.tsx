@@ -1,6 +1,6 @@
 'use client'
 import { Button, Select, SelectItem, Slider } from "@heroui/react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaMale, FaFemale } from "react-icons/fa";
 const Filters = () => {
@@ -14,6 +14,14 @@ const Filters = () => {
     { value: "female", icon: FaFemale },
   ];
   const pathName = usePathname();
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  const handleAgeSelect = (value: number[]) => {
+    const params = new URLSearchParams(searchParams)
+    params.set('ageRange', value.join(','))
+    router.replace(`${pathName}?${params}`)
+  }
   if (pathName !== "/members") {
     return null;
   }
@@ -35,7 +43,9 @@ const Filters = () => {
             label="Age range"
             color="secondary"
             size="sm"
+            aria-label="Slider for age selection"
             minValue={18}
+            onChangeEnd={(value) =>handleAgeSelect(value as number[])}
             maxValue={100}
             defaultValue={[18, 100]}
           />

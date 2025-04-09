@@ -3,9 +3,12 @@ import { getMembers } from "../actions/memberActions";
 import MemberCard from "./MemberCard";
 import { fetchCurrentUserLikeIds } from "../actions/likeAction";
 import PaginationComponent from "@/components/PaginationComponent";
+import { UserFilters } from "@/types";
 
-const MemberPage = async () => {
-  const members = await getMembers();
+const MemberPage = async ({searchParams}: {searchParams: Promise<UserFilters>}) => {
+
+  const params =await searchParams
+  const members = await getMembers(params);
   const likeIds = await fetchCurrentUserLikeIds()
   return (
    <>
