@@ -3,40 +3,44 @@
 import { auth, signIn, signOut } from "@/auth";
 import { LoginSchema } from "@/lib/loginSchema";
 import { prisma } from "@/lib/prisma";
-import { registerSchema, RegisterSchema } from "@/lib/registerSchema";
+import {
+  combineRegisterSchema,
+  registerSchema,
+  RegisterSchema,
+} from "@/lib/registerSchema";
 import { ActionResult } from "@/types";
 import { User } from "@prisma/client";
 import bcryptjs from "bcryptjs";
 import { AuthError } from "next-auth";
 
-
-export async function signInUser(data:LoginSchema) :
-Promise<ActionResult<string>> {
+export async function signInUser(
+  data: LoginSchema
+): Promise<ActionResult<string>> {
   try {
-    const result = await signIn('credentials', {
+    const result = await signIn("credentials", {
       email: data.email,
-      password: data.password, 
-      redirect: false
-    })
-    
+      password: data.password,
+      redirect: false,
+    });
+
     return {
-      status: 'success',
-      data: 'Successfully log in'
-    }
+      status: "success",
+      data: "Successfully log in",
+    };
   } catch (error) {
-    console.log(error)
+    console.log(error);
     if (error instanceof AuthError) {
-      switch(error.type) {
-        case 'CredentialsSignin':
-          return {status: 'error', error: 'Invalid credentials'}
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { status: "error", error: "Invalid credentials" };
         default:
-          return {status: 'error', error: 'Something went wrong'}
+          return { status: "error", error: "Something went wrong" };
       }
     } else {
       return {
-        status: 'error',
-        error: 'Something went wrong'
-      }
+        status: "error",
+        error: "Something went wrong",
+      };
     }
   }
 }
@@ -45,7 +49,7 @@ export async function registerUser(
   data: RegisterSchema
 ): Promise<ActionResult<User>> {
   try {
-    const validated = registerSchema.safeParse(data);
+    const validated = combineRegisterSchema.safeParse(data);
 
     if (!validated.success) {
       // throw new Error(validated.error.errors[0].message);
@@ -56,7 +60,16 @@ export async function registerUser(
       //return { error: validated.error.errors };
     }
 
-    const { name, email, password } = validated.data;
+    const {
+      name,
+      email,
+      password,
+      gender,
+      description,
+      dateOfBirth,
+      city,
+      country,
+    } = validated.data;
 
     const hashedPassword = await bcryptjs.hash(password, 7);
 
@@ -78,6 +91,16 @@ export async function registerUser(
         name,
         email,
         passwordHash: hashedPassword,
+        member: {
+          create: {
+            name,
+            description,
+            city,
+            country,
+            dateOfBirth: new Date(dateOfBirth),
+            gender,
+          },
+        },
       },
     });
     return {
@@ -93,25 +116,24 @@ export async function registerUser(
   }
 }
 
-export async function getUserByEmail(email:string) {
-  return prisma.user.findUnique({where: {email}})
+export async function getUserByEmail(email: string) {
+  return prisma.user.findUnique({ where: { email } });
 }
 
-export async function getUserById(id:string) {
-  return prisma.user.findUnique({where: {id}})
+export async function getUserById(id: string) {
+  return prisma.user.findUnique({ where: { id } });
 }
-
 
 export async function signOutUser() {
-  await signOut({redirectTo: '/'})
+  await signOut({ redirectTo: "/" });
 }
 
-export async function getAuthUserid () {
-  const session = await auth()
-          const userId = session?.user?.id
+export async function getAuthUserid() {
+  const session = await auth();
+  const userId = session?.user?.id;
 
-          if (!userId) {
-            throw new Error('unauthorized')
-        }
-        return userId
+  if (!userId) {
+    throw new Error("unauthorized");
+  }
+  return userId;
 }

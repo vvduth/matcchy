@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { registerUser } from "@/app/actions/authActions";
 import UserDetailsForm from "./UserDetailsForm";
 import ProfileForm from "./ProfileForm";
+import { useRouter } from "next/navigation";
 
 
 const stepSchemas = [registerSchema, profileSchema]
@@ -17,6 +18,7 @@ const RegisterForm = () => {
 
   const [activeSteps, setActiveStep] = useState(0)
   const currentValiationSchema = stepSchemas[activeSteps]
+  const router = useRouter()
 
   const methods = useForm<RegisterSchema>({
     resolver: zodResolver(currentValiationSchema),
@@ -48,20 +50,20 @@ const RegisterForm = () => {
 
   const {setError, handleSubmit,getValues, formState: {errors, isValid, isSubmitting}} = methods
   const onSubmit = async () => {
-    console.log(getValues())
-    // const result = await registerUser(data);
-    // if (result.status === "success") {
-    //   console.log("sucess");
-    // } else {
-    //   if (Array.isArray(result.error)) {
-    //     result.error.forEach((e: any) => {
-    //       const fieldName = e.path.join("");
-    //       setError(fieldName, { message: e.message });
-    //     });
-    //   } else {
-    //     setError("root.serverError", { message: result.error });
-    //   }
-    // }
+    
+    const result = await registerUser(getValues());
+    if (result.status === "success") {
+      router.push('/register/success')
+    } else {
+      if (Array.isArray(result.error)) {
+        result.error.forEach((e: any) => {
+          const fieldName = e.path.join("");
+          setError(fieldName, { message: e.message });
+        });
+      } else {
+        setError("root.serverError", { message: result.error });
+      }
+    }
   };
   return (
     <Card className="w-full md:w-2/5 mx-auto ">
