@@ -1,55 +1,13 @@
 "use client";
+import { useFilters } from "@/hooks/useFilter";
 import { Button, Select, SelectItem, Slider, Selection } from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaMale, FaFemale } from "react-icons/fa";
 const Filters = () => {
-  const orderByList = [
-    { label: "Last active", value: "updatedAt" },
-    { label: "Newest member", value: "createdAt" },
-  ];
+  const pathName = usePathname()
 
-  const gender = [
-    { value: "male", icon: FaMale },
-    { value: "female", icon: FaFemale },
-  ];
-
-  const pathName = usePathname();
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const selectedGender = searchParams.get("gender")?.split(",") || [
-    "female",
-    "male",
-  ];
-
-  const handleAgeSelect = (value: number[]) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("ageRange", value.join(","));
-    router.replace(`${pathName}?${params}`);
-  };
-
-  const handleOrderSelect = (value: Selection) => {
-    if (value instanceof Set) {
-      const params = new URLSearchParams(searchParams);
-      params.set("orderBy", value.values().next().value as string);
-      router.replace(`${pathName}?${params}`);
-    }
-  };
-
-  const handleGenderSelect = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (selectedGender.includes(value)) {
-      params.set(
-        "gender",
-        selectedGender.filter((g) => g !== value).toString()
-      );
-    } else {
-      params.set("gender", [...selectedGender, value].toString());
-    }
-    router.replace(`${pathName}?${params}`);
-
-  };
-
+  const {genderList, orderByList, filters,selectAge, selectGender, selectOrder} = useFilters()
   if (pathName !== "/members") {
     return null;
   }
@@ -60,13 +18,13 @@ const Filters = () => {
         <div className="text-secondary font-semibold text-xl">result: 10</div>
         <div className="flex gap-2 items-center">
           <div>Gender: </div>
-          {gender.map(({ icon: IconBase, value }) => (
+          {genderList.map(({ icon: IconBase, value }) => (
             <Button
               key={value}
               size="sm"
               isIconOnly
-              color={selectedGender.includes(value) ? "secondary" : "default"}
-              onPress={() => handleGenderSelect(value)}
+              color={filters.gender.includes(value) ? "secondary" : "default"}
+              onPress={() => selectGender(value)}
             >
               <IconBase size={24} />
             </Button>
@@ -79,7 +37,7 @@ const Filters = () => {
             size="sm"
             aria-label="Slider for age selection"
             minValue={18}
-            onChangeEnd={(value) => handleAgeSelect(value as number[])}
+            onChangeEnd={(value) => selectAge(value as number[])}
             maxValue={100}
             defaultValue={[18, 100]}
           />
@@ -92,8 +50,8 @@ const Filters = () => {
              variant="bordered"
              color='secondary'
              aria-label="Sort selection"
-            selectedKeys={new Set([searchParams.get("orderBy") || "updated"])}
-            onSelectionChange={handleOrderSelect}
+            selectedKeys={new Set([filters.orderBy])}
+            onSelectionChange={selectOrder}
           >
             {orderByList.map((item) => (
               <SelectItem key={item.value}>{item.label}</SelectItem>
