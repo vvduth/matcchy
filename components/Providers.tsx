@@ -25,7 +25,7 @@ import { usePresentChannel } from "@/hooks/usePresenceChannel";
     }
   }, [setUnreadCount, userId]);
 
-  usePresentChannel() 
+  usePresentChannel(userId) 
   useNotificationChannel(userId)
   
   return (
