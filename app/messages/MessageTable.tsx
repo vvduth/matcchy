@@ -17,11 +17,14 @@ import MessageTableCell from "./MessageTableCell";
 import { useMessages } from "@/hooks/useMessages";
 type Props = {
   initialMessages: MessageDto[];
+  nextCursor?: string
 };
-const MessageTable = ({ initialMessages }: Props) => {
- const {columns, isDeleting, isOutBox, selectRow, deleteMessage, messages} = useMessages(initialMessages)
+const MessageTable = ({ initialMessages, nextCursor }: Props) => {
+ const {columns, isDeleting, isOutBox, selectRow, 
+  deleteMessage, messages, loadMore, loadingMore, hasMore} = useMessages(initialMessages ,nextCursor)
   return (
-    <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
+    <div className="flex flex-col h-[80vh]">
+      <Card className="flex flex-col gap-3 h-[80vh] overflow-auto">
       <Table
         aria-label="Message table"
         selectionMode="single"
@@ -55,7 +58,17 @@ const MessageTable = ({ initialMessages }: Props) => {
           )}
         </TableBody>
       </Table>
+      <div className="sticky bottom-0 pb-3 mr-3 text-right">
+        <Button color="secondary"
+          isLoading={loadingMore}
+          isDisabled={!hasMore}
+          onPress={loadMore}
+        >
+          {hasMore ? "Load more": "No more messages"}
+        </Button>
+      </div>
     </Card>
+    </div>
   );
 };
 

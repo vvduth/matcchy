@@ -26,6 +26,8 @@ export const useFilters = () => {
   const pageNumber = usePaginationStore(state => state.pagination.pageNumber)
   const pageSize = usePaginationStore(state => state.pagination.pageSize)
   const setPage = usePaginationStore(state => state.setPage)
+  const totalCount = usePaginationStore(state => state.pagination.totalCount)
+
 
   const { gender, ageRange, orderBy } = filters;
 
@@ -80,6 +82,7 @@ export const useFilters = () => {
     genderList,
     filters,
     isPending,
+    totalCount,
     selectAge:  handleAgeSelect,
     selectGender: handleGenderSelect,
     selectOrder: handleOrderSelect

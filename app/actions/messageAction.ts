@@ -33,13 +33,21 @@ export async function createMessage(
         senderId: userId,
         recipientId: recipientUserId,
       },
-      select: messageSelect
+      select: messageSelect,
     });
-    const messageDto = mapMessageToMessageDto(message)
+    const messageDto = mapMessageToMessageDto(message);
 
     // push to pusher
-    await pusherServer.trigger(createChatId(userId, recipientUserId), 'message:new', messageDto)
-    await pusherServer.trigger(`private-${recipientUserId}`, 'message:new', messageDto)
+    await pusherServer.trigger(
+      createChatId(userId, recipientUserId),
+      "message:new",
+      messageDto
+    );
+    await pusherServer.trigger(
+      `private-${recipientUserId}`,
+      "message:new",
+      messageDto
+    );
     return {
       status: "success",
       data: messageDto,
@@ -77,38 +85,52 @@ export async function getMessages(recipientId: string) {
       select: messageSelect,
     });
 
-    let readCount = 0
+    let readCount = 0;
 
     if (messages.length > 0) {
-
-      const readMessageIds = messages.filter(m => m.dateread === null &&
-        m.recipient?.userId === userId && 
-        m.sender?.userId === recipientId
-      ).map(m => m.id)
+      const readMessageIds = messages
+        .filter(
+          (m) =>
+            m.dateread === null &&
+            m.recipient?.userId === userId &&
+            m.sender?.userId === recipientId
+        )
+        .map((m) => m.id);
 
       await prisma.message.updateMany({
         where: {
-         id: {in: readMessageIds}
+          id: { in: readMessageIds },
         },
         data: {
           dateread: new Date(),
         },
       });
 
-      readCount = readMessageIds.length
-      await pusherServer.trigger(createChatId(recipientId, userId), 'messages:read', readMessageIds)
+      readCount = readMessageIds.length;
+      await pusherServer.trigger(
+        createChatId(recipientId, userId),
+        "messages:read",
+        readMessageIds
+      );
     }
 
-    const messagesToReturn = messages.map(message => mapMessageToMessageDto(message));
+    const messagesToReturn = messages.map((message) =>
+      mapMessageToMessageDto(message)
+    );
 
-    return {messages: messagesToReturn, readCount}
+    return { messages: messagesToReturn, readCount };
   } catch (error) {
     console.log(error);
     throw error;
   }
 }
 
-export async function getMessageByContainer(container: string) {
+// get inbox message /or outbox mesages
+export async function getMessageByContainer(
+  container?: string | null,
+  cursor?: string,
+  limit = 6
+) {
   try {
     const userId = await getAuthUserid();
 
@@ -122,14 +144,33 @@ export async function getMessageByContainer(container: string) {
     };
 
     const messages = await prisma.message.findMany({
-      where: conditions,
+      where: {
+        ...conditions,
+        ...(cursor ? { createdAt: { lte: new Date(cursor) } } : {}),
+      },
       orderBy: {
         createdAt: "desc",
       },
       select: messageSelect,
+      take: limit + 1,
     });
+    let nextCursor: string | undefined;
 
-    return messages.map((message) => mapMessageToMessageDto(message));
+    if (messages.length > limit) {
+      const nextItem = messages.pop();
+      nextCursor = nextItem?.createdAt.toISOString();
+    } else {
+      nextCursor = undefined;
+    }
+
+    const messagesToReturn = messages.map((message) =>
+      mapMessageToMessageDto(message)
+    );
+
+    return {
+      messages: messagesToReturn,
+      nextCursor: nextCursor,
+    };
   } catch (error) {
     console.log(error);
     throw error;
@@ -183,16 +224,16 @@ export async function deleteMessage(messageId: string, isOutBox: boolean) {
 
 export async function getUnreadMesagesCount() {
   try {
-    const userId = await getAuthUserid()
-    const count =  await prisma.message.count({
+    const userId = await getAuthUserid();
+    const count = await prisma.message.count({
       where: {
         recipientId: userId,
         dateread: null,
-        recipientDeleted: false 
-      }
-    })
-    
-    return count
+        recipientDeleted: false,
+      },
+    });
+
+    return count;
   } catch (error) {
     console.log(error);
     throw error;

@@ -8,7 +8,7 @@ const Filters = () => {
   const pathName = usePathname()
 
   const {genderList, orderByList, filters,selectAge,
-    isPending,
+    isPending, totalCount,
     selectGender, selectOrder} = useFilters()
   
 
@@ -16,8 +16,9 @@ const Filters = () => {
     <div className="shadow-md py-2">
       <div className="flex flex-col md:flex-row justify-around items-center">
         <div className="flex gap-2 items-center">
-        <div className="text-secondary font-semibold text-xl">result: 10</div>
-        {isPending ?? <Spinner size="sm" color='secondary' />}
+        <div className="text-secondary font-semibold text-xl">
+          result:{isPending ? <Spinner size="sm" color='secondary' /> : (<>{totalCount}</>)} </div>
+        
       
 
         </div>
