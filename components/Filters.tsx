@@ -1,19 +1,26 @@
 "use client";
 import { useFilters } from "@/hooks/useFilter";
-import { Button, Select, SelectItem, Slider, Selection } from "@heroui/react";
+import { Button, Select, SelectItem, Slider, Selection, Spinner } from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaMale, FaFemale } from "react-icons/fa";
 const Filters = () => {
   const pathName = usePathname()
 
-  const {genderList, orderByList, filters,selectAge, selectGender, selectOrder} = useFilters()
+  const {genderList, orderByList, filters,selectAge,
+    isPending,
+    selectGender, selectOrder} = useFilters()
   
 
   return (
     <div className="shadow-md py-2">
       <div className="flex flex-col md:flex-row justify-around items-center">
+        <div className="flex gap-2 items-center">
         <div className="text-secondary font-semibold text-xl">result: 10</div>
+        {isPending ?? <Spinner size="sm" color='secondary' />}
+      
+
+        </div>
         <div className="flex gap-2 items-center">
           <div>Gender: </div>
           {genderList.map(({ icon: IconBase, value }) => (
