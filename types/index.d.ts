@@ -52,3 +52,11 @@ type PaginatedResponse<T> = {
   items: T[];
   totalCount: number, 
 }
+
+type GetMemberParamss = {
+  ageRange? : string,
+  gender? : string, 
+  pageNumber?: string,
+  pageSize?: string, 
+  orderBy?: string, 
+}

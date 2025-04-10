@@ -3,16 +3,16 @@ import { getMembers } from "../actions/memberActions";
 import MemberCard from "./MemberCard";
 import { fetchCurrentUserLikeIds } from "../actions/likeAction";
 import PaginationComponent from "@/components/PaginationComponent";
-import { UserFilters } from "@/types";
+import { GetMemberParamss, UserFilters } from "@/types";
 import EmptyState from "@/components/EmptyState";
 
 const MemberPage = async ({
   searchParams,
 }: {
-  searchParams: Promise<UserFilters>;
+  searchParams: Promise<GetMemberParamss>;
 }) => {
   const params = await searchParams;
-  const members = await getMembers(params);
+  const { items: members, totalCount} = await getMembers(params);
   const likeIds = await fetchCurrentUserLikeIds();
   return (
     <>
@@ -30,7 +30,7 @@ const MemberPage = async ({
                 <MemberCard key={member.id} member={member} likeIds={likeIds} />
               ))}
           </div>
-          <PaginationComponent />
+          <PaginationComponent totalCount={totalCount} />
         </>
       )}
     </>
