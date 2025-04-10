@@ -8,9 +8,7 @@ const Filters = () => {
   const pathName = usePathname()
 
   const {genderList, orderByList, filters,selectAge, selectGender, selectOrder} = useFilters()
-  if (pathName !== "/members") {
-    return null;
-  }
+  
 
   return (
     <div className="shadow-md py-2">
