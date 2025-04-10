@@ -1,26 +1,44 @@
 "use client";
 import { useFilters } from "@/hooks/useFilter";
-import { Button, Select, SelectItem, Slider, Selection, Spinner } from "@heroui/react";
+import {
+  Button,
+  Select,
+  SelectItem,
+  Slider,
+  Selection,
+  Spinner,
+  Switch,
+  useSwitch,
+} from "@heroui/react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React from "react";
 import { FaMale, FaFemale } from "react-icons/fa";
 const Filters = () => {
-  const pathName = usePathname()
-
-  const {genderList, orderByList, filters,selectAge,
-    isPending, totalCount,
-    selectGender, selectOrder} = useFilters()
-  
+  const pathName = usePathname();
+  const {
+    genderList,
+    orderByList,
+    filters,
+    selectAge,
+    isPending,
+    totalCount,
+    selectGender,
+    selectOrder,
+    selectPhoto
+  } = useFilters();
 
   return (
     <div className="shadow-md py-2">
       <div className="flex flex-col md:flex-row justify-around items-center">
         <div className="flex gap-2 items-center">
-        <div className="text-secondary font-semibold text-xl">
-          result:{isPending ? <Spinner size="sm" color='secondary' /> : (<>{totalCount}</>)} </div>
-        
-      
-
+          <div className="text-secondary font-semibold text-xl">
+            result:
+            {isPending ? (
+              <Spinner size="sm" color="secondary" />
+            ) : (
+              <>{totalCount}</>
+            )}{" "}
+          </div>
         </div>
         <div className="flex gap-2 items-center">
           <div>Gender: </div>
@@ -50,12 +68,12 @@ const Filters = () => {
         </div>
         <div className="w-1/4">
           <Select
-             size="sm"
-             fullWidth
-             label="Order by"
-             variant="bordered"
-             color='secondary'
-             aria-label="Sort selection"
+            size="sm"
+            fullWidth
+            label="Order by"
+            variant="bordered"
+            color="secondary"
+            aria-label="Sort selection"
             selectedKeys={new Set([filters.orderBy])}
             onSelectionChange={selectOrder}
           >
@@ -63,6 +81,11 @@ const Filters = () => {
               <SelectItem key={item.value}>{item.label}</SelectItem>
             ))}
           </Select>
+        </div>
+        <div className="gap-2 mt-2">
+          <Switch color="secondary" defaultSelected 
+          onValueChange={selectPhoto}
+          >With photos</Switch>
         </div>
       </div>
     </div>

@@ -29,13 +29,13 @@ export const useFilters = () => {
   const totalCount = usePaginationStore(state => state.pagination.totalCount)
 
 
-  const { gender, ageRange, orderBy } = filters;
+  const { gender, ageRange, orderBy,withPhoto } = filters;
 
   useEffect(() => {
-    if (gender|| ageRange|| orderBy) {
+    if (gender|| ageRange|| orderBy ||withPhoto) {
       setPage(1)
     }
-  }, [gender, ageRange, orderBy])
+  }, [gender, ageRange, orderBy, withPhoto])
   //console.log(gender)
 
   useEffect(() => {
@@ -47,12 +47,13 @@ export const useFilters = () => {
       if (orderBy) searchParams.set("orderBy", orderBy);
       if (pageSize ) searchParams.set("pageSize",pageSize.toString())
       if (pageNumber ) searchParams.set("pageNumber",pageNumber.toString())
+      searchParams.set('withPhoto', withPhoto.toString() )  
 
   
       router.replace(`${pathName}?${searchParams}`);
     })
     
-  }, [ageRange, gender, pageSize, pageNumber,orderBy, pathName, router]);
+  }, [ageRange, gender, pageSize, pageNumber,orderBy,withPhoto, pathName, router]);
 
   const handleAgeSelect = (value: number[]) => {
     setFilters('ageRange', value)
@@ -77,6 +78,10 @@ export const useFilters = () => {
     router.replace(`${pathName}?${params}`);
   };
 
+  const handleTogglePhoto = (value: boolean) => {
+    setFilters('withPhoto',value )
+  }
+
   return {
     orderByList,
     genderList,
@@ -85,6 +90,7 @@ export const useFilters = () => {
     totalCount,
     selectAge:  handleAgeSelect,
     selectGender: handleGenderSelect,
-    selectOrder: handleOrderSelect
+    selectOrder: handleOrderSelect,
+    selectPhoto: handleTogglePhoto
   }
 };
