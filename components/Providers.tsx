@@ -8,7 +8,8 @@ import { usePresentChannel } from "@/hooks/usePresenceChannel";
  import { ReactNode, useCallback, useEffect } from "react";
  import {ToastContainer} from "react-toastify"
  import 'react-toastify/dist/ReactToastify.css'
- export default function Providers({children, userId}: {children: ReactNode, userId: string | null}) {
+ export default function Providers({children, userId, profileComplete}: {children: ReactNode,
+  profileComplete: boolean, userId: string | null}) {
   
   const updateUnreadCount = useMessageStore(state => state.updateUnreadCount);
 
@@ -25,8 +26,8 @@ import { usePresentChannel } from "@/hooks/usePresenceChannel";
     }
   }, [setUnreadCount, userId]);
 
-  usePresentChannel(userId) 
-  useNotificationChannel(userId)
+  usePresentChannel(userId, profileComplete) 
+  useNotificationChannel(userId, profileComplete)
   
   return (
      <HeroUIProvider>

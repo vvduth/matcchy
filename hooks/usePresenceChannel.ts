@@ -4,7 +4,7 @@ import { Channel, Members } from "pusher-js";
 import { pusherClient } from "@/lib/pusher";
 import {useShallow} from 'zustand/shallow'
 import { updateLastActive } from "@/app/actions/memberActions";
-export const usePresentChannel = (userId: string| null) => {
+export const usePresentChannel = (userId: string| null,profileComplete: boolean) => {
   const { set, add, remove } = usePresenceStore(
     useShallow(
     (state) => ({
@@ -35,7 +35,7 @@ export const usePresentChannel = (userId: string| null) => {
     [remove]
   );
   useEffect(() => {
-    if (!userId) {
+    if (!userId || !profileComplete) {
       return 
     }
     if (!channelRef.current) {
@@ -69,5 +69,5 @@ export const usePresentChannel = (userId: string| null) => {
             channelRef.current.unbind_all()
         }
     }
-  }, [handleAddMembers, handleRemoveMember, handleSetMembers, userId]);
+  }, [handleAddMembers, handleRemoveMember, handleSetMembers, userId, profileComplete]);
 };

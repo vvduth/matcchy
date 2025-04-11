@@ -9,7 +9,7 @@ import { newMessageToast } from "@/components/NewMessageToast";
 import { newLikeToast } from "@/components/NewLikeToast";
 import { Like, Member } from "@prisma/client";
 
-export const useNotificationChannel = (userId: string | null) => {
+export const useNotificationChannel = (userId: string | null, profileComplete: boolean) => {
   const channelRef = useRef<Channel | null>(null);
   const channelLikeRef  = useRef<Channel | null>(null);
   const pathname = usePathname();
@@ -37,7 +37,7 @@ export const useNotificationChannel = (userId: string | null) => {
   },[])
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId|| !profileComplete) return;
     if (!channelRef.current) {
       channelRef.current = pusherClient.subscribe(`private-${userId}`);
       channelLikeRef.current = pusherClient.subscribe(`private-like-${userId}`);
@@ -59,5 +59,5 @@ export const useNotificationChannel = (userId: string | null) => {
         channelLikeRef.current = null;
       }
     };
-  }, [userId, handleNewMessage, handleNewLike]);
+  }, [userId, handleNewMessage, handleNewLike, profileComplete]);
 };
