@@ -5,6 +5,7 @@ import { useMessageStore } from "@/hooks/useMessageStore";
 import { useNotificationChannel } from "@/hooks/useNotifycationChannel";
 import { usePresentChannel } from "@/hooks/usePresenceChannel";
  import { HeroUIProvider } from "@heroui/react";
+import { SessionProvider } from "next-auth/react";
  import { ReactNode, useCallback, useEffect } from "react";
  import {ToastContainer} from "react-toastify"
  import 'react-toastify/dist/ReactToastify.css'
@@ -30,9 +31,11 @@ import { usePresentChannel } from "@/hooks/usePresenceChannel";
   useNotificationChannel(userId, profileComplete)
   
   return (
-     <HeroUIProvider>
+    <SessionProvider>
+      <HeroUIProvider>
       <ToastContainer position="bottom-right" hideProgressBar className={'z-50'}  />
          {children}
      </HeroUIProvider>
+    </SessionProvider>
    )
  }

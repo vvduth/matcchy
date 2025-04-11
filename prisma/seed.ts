@@ -26,7 +26,8 @@ async function seedMembers() {
                     image: member.image,
                     photos: {
                         create: {
-                            url: member.image
+                            url: member.image,
+                            isApproved: true
                         }
                     }
                 }
@@ -48,11 +49,11 @@ async function seedAdmin() {
 }
 
 async function  main() {
-    if (process.env.RUN_SEED === 'true' ) {
-        await seedMembers()
-        await seedAdmin()
-    }
-    
+    // if (process.env.RUN_SEED === 'true' ) {
+       
+    // }
+    await seedMembers()
+    await seedAdmin()
     
 }
 
