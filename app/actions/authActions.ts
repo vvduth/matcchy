@@ -6,6 +6,7 @@ import { sendPasswordResetEmail, sendVerificationEmail } from "@/lib/mail";
 import { prisma } from "@/lib/prisma";
 import {
   combineRegisterSchema,
+  ProfileSchema,
   registerSchema,
   RegisterSchema,
 } from "@/lib/registerSchema";
@@ -265,5 +266,50 @@ export async function resetPassword(
   } catch (error) {
     console.log(error);
     return { status: "error", error: "Something went wrong" };
+  }
+}
+
+export async function completeSocialLoginProfile(
+  data: ProfileSchema
+): Promise<ActionResult<string>> {
+  const session = await auth();
+
+  if (!session?.user)
+    return {
+      status: "error",
+      error: "User not found",
+    };
+
+  try {
+    const user = await prisma.user.update({
+      where: {
+        id: session.user.id,
+      },
+      data: {
+        profileComplete: true,
+        member: {
+          create: {
+            name: session.user.name as string,
+            image: session.user.image,
+            gender: data.gender,
+            dateOfBirth: new Date(data.dateOfBirth),
+            description: data.dateOfBirth,
+            city: data.city,
+            country: data.country,
+          },
+        },
+      },
+      select: {
+        accounts: {
+          select: {
+            provider: true,
+          },
+        },
+      },
+    });
+    return { status: "success", data: user.accounts[0].provider };
+  } catch (error) {
+    console.log(error);
+    throw error;
   }
 }

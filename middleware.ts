@@ -8,6 +8,7 @@ import {auth} from '@/auth';
  
      const isPublic = publicRoutes.includes(nextUrl.pathname);
      const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+     const isProfileComplete = req.auth?.user.profileComplete
  
      if (isPublic) {
          return NextResponse.next();
@@ -22,6 +23,11 @@ import {auth} from '@/auth';
  
      if (!isPublic && !isLoggedIn) {
          return NextResponse.redirect(new URL('/login', nextUrl));
+     }
+
+     // user logged in with social, still need profile provided
+     if (isLoggedIn && !isProfileComplete && nextUrl.pathname !== '/complete-profile') {
+        return NextResponse.redirect(new URL('/complete-profile', nextUrl));
      }
  
      return NextResponse.next();
