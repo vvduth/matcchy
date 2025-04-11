@@ -3,19 +3,23 @@ import usePaginationStore from "@/hooks/usePaginationStore";
 import { Pagination } from "@heroui/react";
 import clsx from "clsx";
 import React, { useEffect, useState } from "react";
+import { useShallow } from "zustand/shallow";
 
 const PaginationComponent = ({ totalCount }: { totalCount: number }) => {
-  const setPage = usePaginationStore((state) => state.setPage);
-  const setPageSize = usePaginationStore((state) => state.setPageSize);
+  const { setPage, setPageSize, setPagination, pagination } = usePaginationStore(
+    useShallow(
+        state => ({
+            setPage: state.setPage,
+            setPageSize: state.setPageSize,
+            setPagination: state.setPagination,
+            pagination: state.pagination
+        })));
 
-  const setPagination = usePaginationStore((state) => state.setPagination);
-  const pagination = usePaginationStore((state) => state.pagination);
-
-  const { pageNumber, pageSize, totalPages } = pagination;
+const { pageNumber, pageSize, totalPages } = pagination;
 
   useEffect(() => {
     setPagination(totalCount);
-  }, [setPagination]);
+  }, [setPagination,totalCount]);
 
   const start = (pageNumber - 1) * pageSize + 1;
   const end = Math.min(pageNumber * pageSize, totalCount);

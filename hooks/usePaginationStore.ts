@@ -32,18 +32,13 @@ const usePaginationStore = create<PaginationState>()(
         set((state) => ({
           pagination: { ...state.pagination, pageNumber: page },
         })),
-      setPageSize: (pageSize: number) => {
-        set((state) => ({
-          pagination: {
-            ...state.pagination,
-            pageSize,
-            pageNumber: 1,
-            totalPages: Math.ceil(
-              state.pagination.totalCount / state.pagination.pageSize
-            ),
-          },
-        }));
-      },
+      setPageSize: (pageSize: number) => 
+        set(state => ({pagination: {
+          ...state.pagination, 
+          pageSize: pageSize,
+          pageNumber: 1,
+          totalPages: Math.ceil(state.pagination.totalCount/pageSize)
+      }})),
     }),
     {
       name: "paginationStoreDemo",

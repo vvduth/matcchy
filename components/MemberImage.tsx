@@ -6,13 +6,39 @@ import { Button, Image } from "@heroui/react";
 import clsx from "clsx";
 import { ImCheckmark, ImCross } from "react-icons/im";
 import { useRole } from "@/hooks/useRole";
+import { useRouter } from "next/navigation";
+import { approvePhoto, rejectPhoto } from "@/app/actions/adminActions";
+import { toast } from "react-toastify";
 type Props = {
   photo: Photo | null;
 };
 const MemberImage = ({ photo }: Props) => {
   const role = useRole();
+  const router = useRouter();
+
+  if (!photo) {
+    return null;
+  }
+  const approve = async (photoId: string) => {
+    try {
+      await approvePhoto(photoId);
+      router.refresh();
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message);
+    }
+  };
+
+  const reject = async (photo: Photo) => {
+    try {
+      await rejectPhoto(photo);
+      router.refresh();
+    } catch (error: unknown) {
+      if (error instanceof Error) toast.error(error.message);
+    }
+  };
+
   return (
-    <div className='cursor-pointer'>
+    <div className="cursor-pointer">
       {photo?.publicId ? (
         <CldImage
           alt="Image of member"
@@ -21,9 +47,9 @@ const MemberImage = ({ photo }: Props) => {
           height={300}
           crop={"fill"}
           gravity="faces"
-          className={clsx('rounded-2xl', {
-            'opacity-40': !photo.isApproved && role !== 'ADMIN'
-        })}
+          className={clsx("rounded-2xl", {
+            "opacity-40": !photo.isApproved && role !== "ADMIN",
+          })}
           priority
         />
       ) : (
@@ -44,20 +70,10 @@ const MemberImage = ({ photo }: Props) => {
       )}
       {role === "ADMIN" && (
         <div className="flex flex-row gap-2 mt-2">
-          <Button
-            onPress={() => {}}
-            color="success"
-            variant="bordered"
-            
-          >
+          <Button onPress={() => approve(photo.id)}  color="success" variant="bordered">
             <ImCheckmark size={20} />
           </Button>
-          <Button
-            onPress={() => {}}
-            color="danger"
-            variant="bordered"
-            
-          >
+          <Button onPress={() => reject(photo)}  color="danger" variant="bordered">
             <ImCross size={20} />
           </Button>{" "}
         </div>
