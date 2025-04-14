@@ -9,8 +9,8 @@
 - **Website**: [https://matcchy.vercel.app/](https://matcchy.vercel.app/)
 - **Admin Account**: `admin@test.com` / `password`
 - **Member Account**: Replace `membername` with a name of your choice. For example:  
-  - Email: `tood@example.com`  
-  - Password: `passoord` (Note: this seems to be a typo; adjust in the app if needed)
+  - Email: `tood@test.com`  
+  - Password: `password`
 
 ---
 
