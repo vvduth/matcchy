@@ -1,6 +1,6 @@
 export const publicRoutes = [
     '/'
-]
+];
 
 export const authRoutes = [
     '/login',
@@ -9,5 +9,4 @@ export const authRoutes = [
     '/verify-email',
     '/forgot-password',
     '/reset-password'
-
-]
+];
