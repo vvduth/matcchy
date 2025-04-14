@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 import TopNav from "@/components/Navbar/TopNav";
 import { auth } from "@/auth";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "NextMatch",
@@ -23,9 +24,10 @@ export default async  function RootLayout({
       <body>
         <Providers userId = {userId} profileComplete={profileComplete}>
           <TopNav />
-          <main className='container mx-auto p-10'>
+          <main className='min-h-screen bg-gradient-to-br from-secondary-50 to-purple-100 text-gray-800 p-10'>
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>

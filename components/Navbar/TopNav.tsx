@@ -7,10 +7,14 @@ import { auth } from "@/auth";
 import Usermenu from "./Usermenu";
 import { getUserInfoForNav } from "@/app/actions/userActions";
 import FilterWrapper from "./FilterWrapper";
+import { useState } from "react";
+import clsx from "clsx";
+import MobileMenu from "./MobileMenu";
 
 const TopNav = async () => {
   const session = await auth();
   const userInfo = session?.user && (await getUserInfoForNav());
+  
 
   const memberLinks = [
     { href: "/members", label: "Matches" },
@@ -41,12 +45,13 @@ const TopNav = async () => {
             <span className="text-gray-200">chy</span>
           </div>
         </NavbarBrand>
-        <NavbarContent justify="center">
+        <NavbarContent className="hidden md:flex" justify="center">
           {session &&
             links.map((item) => (
               <NavLink key={item.href} href={item.href} label={item.label} />
             ))}
         </NavbarContent>
+        <MobileMenu session={session} links={links} />
         <NavbarContent justify="end">
           {userInfo ? (
             <Usermenu user={userInfo} />

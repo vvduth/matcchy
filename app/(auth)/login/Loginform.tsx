@@ -31,7 +31,7 @@ const Loginform = () => {
     }
   };
   return (
-    <Card className="w-2/5 mx-auto ">
+    <Card className="w-full md:w-2/5 mx-auto ">
       <CardHeader
         className="flex flex-col items-center
        justify-center"
