@@ -1,4 +1,5 @@
 "use client";
+import { useMessageStore } from "@/hooks/useMessageStore";
 import { Chip } from "@heroui/react";
 import clsx from "clsx";
 
@@ -8,6 +9,7 @@ import { GoInbox } from "react-icons/go";
 import { MdOutlineOutbox } from "react-icons/md";
 
 const MessageSideBar = () => {
+  const unreadCount = useMessageStore(state => state.unreadCount)
   const searchParams = useSearchParams();
   const router = useRouter()
   const pathname = usePathname()
@@ -37,7 +39,7 @@ const MessageSideBar = () => {
           <Icon size={24} />
           <div className="flex justify-between gap-2 flex-grow">
             <span>{label}</span>
-            {chip && <Chip>5</Chip>}
+            {(chip && key==='inbox') && <Chip>{unreadCount}</Chip>}
           </div>
         </div>
       ))}

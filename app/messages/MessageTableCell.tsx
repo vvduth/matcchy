@@ -1,7 +1,8 @@
+import AppModal from "@/components/AppModal";
 import PresenceAvatar from "@/components/PresenceAvatar";
 import { truncateString } from "@/lib/util";
 import { MessageDto } from "@/types";
-import { Button } from "@heroui/react";
+import { Button, ButtonProps, useDisclosure } from "@heroui/react";
 import React from "react";
 import { AiFillDelete } from "react-icons/ai";
 type Props = {
@@ -19,6 +20,17 @@ const MessageTableCell = ({
   isDeleting,
 }: Props) => {
   const cellvalue = item[columnKey as keyof MessageDto];
+  const {isOpen, onOpen, onClose} = useDisclosure()
+
+  const onConfirmDeleteMessage = () => {
+    deleteMessage(item);
+}
+
+  const footerButtons: ButtonProps[] = [
+    {color: 'default', onClick: onClose, children: 'Cancel'},
+    {color: 'secondary', onClick: onConfirmDeleteMessage, children: 'Confirm'},
+]
+
   switch (columnKey) {
     case "recipientName":
     case "senderName":
@@ -37,17 +49,27 @@ const MessageTableCell = ({
     case "text":
       return <div className="truncate">{truncateString(cellvalue)}</div>;
     case "createdAt":
-      return cellvalue;
+      return <div>{cellvalue}</div>;
     default:
       return (
+        <>
         <Button
           isIconOnly
           variant="light"
-          onPress={() => deleteMessage(item)}
+          onPress={() => onOpen()}
           isLoading={isDeleting}
         >
           <AiFillDelete size={24} className="text-danger" />
         </Button>
+        <AppModal isOpen={isOpen}
+                        onClose={onClose}
+                        header="Please confirm this action"
+                        body={<div>
+                            Are you sure you want to delete this message? This cannot be undone
+                        </div>}
+                        footerButtons={footerButtons}
+        />
+        </>
       );
   }
 };
