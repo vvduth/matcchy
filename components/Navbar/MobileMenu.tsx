@@ -13,11 +13,10 @@ type LinkType = {
   label: string;
 }[];
 type Props = {
-  session: Session | null;
   links: LinkType;
 };
 
-const MobileMenu = ({ session, links }: Props) => {
+const MobileMenu = ({ links }: Props) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const pathname = usePathname();
   const toggleMenu = () => {
@@ -36,28 +35,26 @@ const MobileMenu = ({ session, links }: Props) => {
           <span className="sr-only">Open main menu</span>
           {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
         </Button>
-        
       </div>
       <NavbarContent
-          className={clsx("md:hidden py-3", isMenuOpen ? "block" : "hidden")}
-        >
-          <div className="flex flex-col px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
-            {session &&
-              links.map((link) => (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    pathname === link.href
-                      ? "text-pink-500 bg-pink-50"
-                      : "text-gray-700 hover:text-pink-500 hover:bg-pink-50"
-                  }`}
-                >
-                  {link.label}
-                </Link>
-              ))}
-          </div>
-        </NavbarContent>
+        className={clsx("md:hidden py-3", isMenuOpen ? "block" : "hidden")}
+      >
+        <div className="flex flex-col px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white shadow-lg">
+          {links.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                pathname === link.href
+                  ? "text-pink-500 bg-pink-50"
+                  : "text-gray-700 hover:text-pink-500 hover:bg-pink-50"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
+      </NavbarContent>
     </>
   );
 };

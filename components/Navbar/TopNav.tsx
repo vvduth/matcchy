@@ -7,8 +7,6 @@ import { auth } from "@/auth";
 import Usermenu from "./Usermenu";
 import { getUserInfoForNav } from "@/app/actions/userActions";
 import FilterWrapper from "./FilterWrapper";
-import { useState } from "react";
-import clsx from "clsx";
 import MobileMenu from "./MobileMenu";
 
 const TopNav = async () => {
@@ -51,7 +49,9 @@ const TopNav = async () => {
               <NavLink key={item.href} href={item.href} label={item.label} />
             ))}
         </NavbarContent>
-        <MobileMenu session={session} links={links} />
+        {session && (
+          <MobileMenu links={links} />
+        )}
         <NavbarContent justify="end">
           {userInfo ? (
             <Usermenu user={userInfo} />
