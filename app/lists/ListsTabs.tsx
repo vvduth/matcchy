@@ -1,5 +1,5 @@
 "use client";
-import { Tab, Tabs } from "@heroui/react";
+import { Spinner, Tab, Tabs } from "@heroui/react";
 import { Member } from "@prisma/client";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { Key, useTransition } from "react";
@@ -29,7 +29,8 @@ const ListsTabs = ({ members, likeIds }: Props) => {
     });
   };
   return (
-    <div className="flex w-full flex-col mt-10 gap-5">
+    <div className="flex w-full flex-col mt-10 gap-5 relative">
+       {isPending && <Spinner color='secondary' className="absolute left-[480px]" />}
       <Tabs
         aria-label="Like tabs"
         items={tabes}
@@ -42,7 +43,7 @@ const ListsTabs = ({ members, likeIds }: Props) => {
               <LoadingComponent />
             ) : (
               <>
-                {members.length > 0 ? (
+                {(members.length > 0)  ? (
                   <div
                     className="mt-10 grid grid-cols-2 md:grid-cols-2 
     lg:grid-cols-3 xl:grid-cols-6 gap-8"

@@ -2,19 +2,21 @@
 import { Photo } from "@prisma/client";
 import { CldImage } from "next-cloudinary";
 import React from "react";
-import { Button, Image } from "@heroui/react";
+import { Button, Image, useDisclosure } from "@heroui/react";
 import clsx from "clsx";
 import { ImCheckmark, ImCross } from "react-icons/im";
 import { useRole } from "@/hooks/useRole";
 import { useRouter } from "next/navigation";
 import { approvePhoto, rejectPhoto } from "@/app/actions/adminActions";
 import { toast } from "react-toastify";
+import AppModal from "./AppModal";
 type Props = {
   photo: Photo | null;
 };
 const MemberImage = ({ photo }: Props) => {
   const role = useRole();
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   if (!photo) {
     return null;
@@ -38,7 +40,7 @@ const MemberImage = ({ photo }: Props) => {
   };
 
   return (
-    <div className="cursor-pointer">
+    <div className="cursor-pointer" onClick={onOpen}>
       {photo?.publicId ? (
         <CldImage
           alt="Image of member"
@@ -70,14 +72,49 @@ const MemberImage = ({ photo }: Props) => {
       )}
       {role === "ADMIN" && (
         <div className="flex flex-row gap-2 mt-2">
-          <Button onPress={() => approve(photo.id)}  color="success" variant="bordered">
+          <Button
+            onPress={() => approve(photo.id)}
+            color="success"
+            variant="bordered"
+          >
             <ImCheckmark size={20} />
           </Button>
-          <Button onPress={() => reject(photo)}  color="danger" variant="bordered">
+          <Button
+            onPress={() => reject(photo)}
+            color="danger"
+            variant="bordered"
+          >
             <ImCross size={20} />
           </Button>{" "}
         </div>
       )}
+      <AppModal
+        imageModal={true}
+        isOpen={isOpen}
+        onClose={onClose}
+        body={
+          <>
+            {photo?.publicId ? (
+              <CldImage
+                alt="image of member"
+                src={photo.publicId}
+                width={750}
+                height={750}
+                className={clsx("rounded-2xl", {
+                  "opacity-40": !photo.isApproved && role !== "ADMIN",
+                })}
+                priority
+              />
+            ) : (
+              <Image
+                width={750}
+                src={photo?.url || "/images/user.png"}
+                alt="Image of user"
+              />
+            )}
+          </>
+        }
+      />
     </div>
   );
 };
