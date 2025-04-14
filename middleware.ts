@@ -30,7 +30,7 @@ import {auth} from '@/auth';
      }
 
      // user logged in with social, still need profile provided
-     if (isLoggedIn && !isProfileComplete && nextUrl.pathname !== '/complete-profile') {
+     if (isLoggedIn && !isProfileComplete &&  !isAuthRoute && nextUrl.pathname !== '/complete-profile') {
         return NextResponse.redirect(new URL('/complete-profile', nextUrl));
      }
  
